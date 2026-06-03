@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container text-center mb-5 fade-in">
+    <h1 class="fw-bold text-white">CATÁLOGO <span style="color: #00f2fe;">COMPLETO</span></h1>
+</div>
+
+<div class="container">
+    <div class="row g-4">
+        {% for producto in productos %}
+        <div class="col-lg-4 col-md-6 fade-in delay-3">
+            <div class="product-card">
+                
+                <div class="img-box carousel-js" data-images="{{ producto.imagenes|join('|') }}">
+                    <img src="{{ producto.imagenes[0] }}" alt="{{ producto.nombre }}">
+                </div>
+                
+                <div class="p-3 text-center">
+                    <h4 class="fw-bold text-white">{{ producto.nombre }}</h4>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="price-tag">${{ producto.precio }}</span>
+                        
+                        <button class="btn btn-juego btn-agregar-carrito px-4 rounded-pill" 
+                                data-id="{{ producto.id }}" 
+                                data-nombre="{{ producto.nombre }}" 
+                                data-precio="{{ producto.precio }}" 
+                                data-imagen="{{ producto.imagenes[0] }}">
+                            🛒 Comprar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Lógica del Carrusel de imágenes
+    const carousels = document.querySelectorAll(".carousel-js");
+    carousels.forEach((box) => {
+        let images = box.dataset.images.split("|");
+        let index = 0;
+        const img = box.querySelector("img");
+
+        setInterval(() => {
+            index = (index + 1) % images.length;
+            img.style.opacity = 0; 
+            setTimeout(() => {
+                img.src = images[index];
+                img.style.opacity = 1;
+            }, 300); 
+        }, 2000);
+    });
+
+    // 2. ¡LA MAGIA DEL CARRITO!
+    // Buscamos todos los botones de comprar
+    const botonesComprar = document.querySelectorAll('.btn-agregar-carrito');
+    
+    botonesComprar.forEach(boton => {
+        boton.addEventListener('click', function() {
+            // Extraemos los datos del HTML
+            const productoNuevo = {
+                id: this.dataset.id,
+                nombre: this.dataset.nombre,
+                precio: parseFloat(this.dataset.precio),
+                imagen: this.dataset.imagen,
+                cantidad: 1 // Por defecto agregamos 1 al carrito
+            };
+            
+            // Llamamos a la función que está en carrito.js
+            if(typeof agregarAlCarrito === 'function') {
+                agregarAlCarrito(productoNuevo);
+            } else {
+                console.error("No se encontró la función agregarAlCarrito. Verifica que carrito.js esté cargando.");
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

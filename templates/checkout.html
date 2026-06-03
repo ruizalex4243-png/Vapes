@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container fade-in delay-1" style="margin-top: 50px;">
+    <h2 class="text-white text-center mb-4">
+        REGISTRO DE <span style="color: #00f2fe;">COMPRA</span>
+    </h2>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-6 p-4 rounded" style="background: rgba(30, 25, 45, 0.7); border: 1px solid rgba(0, 242, 254, 0.3);">
+            
+            <form id="formulario-compra">
+                <div class="mb-3">
+                    <label class="text-light mb-2">Nombre Completo</label>
+                    <input type="text" id="input-nombre" class="form-control bg-dark text-white border-secondary" placeholder="Ej. Saúl Vape" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="text-light mb-2">Dirección de Envío</label>
+                    <input type="text" id="input-direccion" class="form-control bg-dark text-white border-secondary" placeholder="Tu dirección completa" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="text-light mb-2">Método de Pago</label>
+                    <select id="input-pago" class="form-select bg-dark text-white border-secondary">
+                        <option value="Efectivo">Pago Contra Entrega (Efectivo)</option>
+                        <option value="Tarjeta">Tarjeta de Crédito / Débito</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-juego w-100 py-3 fs-5">
+                    CONFIRMAR COMPRA
+                </button>
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+document.getElementById('formulario-compra').addEventListener('submit', function(e) {
+    e.preventDefault(); 
+    
+    let carrito = JSON.parse(localStorage.getItem("vaporhaus_cart")) || [];
+    
+    let nombreCliente = document.getElementById('input-nombre').value;
+    let direccionCliente = document.getElementById('input-direccion').value;
+    let metodoPago = document.getElementById('input-pago').value;
+    
+    let datosCompra = {
+        carrito: carrito,
+        cliente: nombreCliente,
+        direccion: direccionCliente,
+        pago: metodoPago
+    };
+
+    fetch('/venta', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datosCompra)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.status === 'ok') {
+            localStorage.removeItem("vaporhaus_cart"); 
+            window.location.href = "{{ url_for('compra_realizada') }}";
+        }
+    });
+});
+</script>
+{% endblock %}

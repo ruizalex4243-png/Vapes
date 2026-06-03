@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container text-center fade-in delay-1" style="margin-top: 15vh;">
+    
+    <h1 class="display-2 fw-bold text-white">
+        ¡COMPRA <span style="color: #ff007f;">EXITOSA</span>!
+    </h1>
+    
+    <div class="my-5">
+        <span style="font-size: 5rem;">🚀🛒</span>
+    </div>
+    
+    <p class="text-light fs-4 mt-4 opacity-75">
+        Tu pedido fue registrado en nuestra base de datos y pronto estará en tus manos.
+    </p>
+    
+    <div class="mt-5">
+        <a href="{{ url_for('inicio') }}" class="btn btn-outline-light rounded-pill px-4 py-2 me-3">
+            Volver al Inicio
+        </a>
+        <a href="{{ url_for('catalogo') }}" class="btn btn-juego rounded-pill px-4 py-2">
+            Seguir Comprando
+        </a>
+    </div>
+
+</div>
+{% endblock %}

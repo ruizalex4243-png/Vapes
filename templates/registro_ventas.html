@@ -1,0 +1,110 @@
+{% extends './base.html' %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<div class="container container-padding">
+
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-white">VAPOR CATALOG</h1>
+        <p class="text-muted">Productos premium con estética neon</p>
+    </div>
+
+    <div class="row g-4">
+
+        {% for producto in productos %}
+
+        <div class="col-lg-4 col-md-6">
+
+            <div class="product-card js-card">
+
+                <div class="carousel-js"
+                     data-images="{{ producto[6]|join('|') if producto[6] is defined else '' }}"
+                     data-fallback="{{ producto[5] }}">
+
+                    <img class="carousel-img active" src="{{ producto[5] }}" alt="{{ producto[1] }}">
+
+                </div>
+
+                <div class="p-3">
+
+                    <span class="category-badge">{{ producto[2] }}</span>
+
+                    <h4 class="text-white fw-bold mt-2">{{ producto[1] }}</h4>
+
+                    <p class="text-muted small">{{ producto[4] }}</p>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+
+                        <span class="price-tag">${{ producto[3] }}</span>
+
+                        <button class="btn btn-outline-neon btn-sm">
+                            Comprar
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="{{ url_for('static', filename='js/carrito.js') }}"></script>
+
+{% block js %}{% endblock %}
+<script 
+document.addEventListener("DOMContentLoaded", () => {
+
+    const carousels = document.querySelectorAll(".carousel-js");
+
+    carousels.forEach((box) => {
+
+        let images = box.dataset.images
+            ? box.dataset.images.split("|")
+            : [];
+
+        const fallback = box.dataset.fallback;
+
+        if (images.length === 0) {
+            images = [fallback];
+        }
+
+        let index = 0;
+
+        const imgElement = box.querySelector("img");
+
+        setInterval(() => {
+
+            index++;
+
+            if (index >= images.length) {
+                index = 0;
+            }
+
+            imgElement.style.opacity = 0;
+
+            setTimeout(() => {
+                imgElement.src = images[index];
+                imgElement.style.opacity = 1;
+            }, 200);
+
+        }, 2500);
+
+    });
+
+};</script>
+{% endblock %}
