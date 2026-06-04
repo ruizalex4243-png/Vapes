@@ -2,35 +2,87 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Vaporhaus Arcade</title>
     <style>
-        body { margin: 0; background-color: #0a0a0f; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; }
-        canvas { border: 2px solid #00f2fe; box-shadow: 0 0 15px #00f2fe; background: url('https://static.vecteezy.com/system/resources/previews/003/776/240/non_2x/blurred-colorful-holographic-background-in-neon-colors-trendy-wallpaper-foil-texture-vector.jpg') no-repeat center center; background-size: cover; }
-        .btn-volver { margin-top: 20px; padding: 10px 20px; background: #ff3232; color: white; text-decoration: none; font-weight: bold; border-radius: 5px; }
+        body { 
+            margin: 0; 
+            background-color: #0a0a0f; 
+            color: white; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            flex-direction: column; 
+            overflow: hidden; /* Evita que la pantalla se mueva al jugar en móvil */
+        }
+        
+        canvas { 
+            border: 2px solid #00f2fe; 
+            box-shadow: 0 0 15px #00f2fe; 
+            background: url('https://static.vecteezy.com/system/resources/previews/003/776/240/non_2x/blurred-colorful-holographic-background-in-neon-colors-trendy-wallpaper-foil-texture-vector.jpg') no-repeat center center; 
+            background-size: cover; 
+            max-width: 100%; /* Ajuste responsivo */
+            max-height: 80vh;
+        }
+        
+        .btn-volver { 
+            margin-top: 20px; 
+            padding: 10px 20px; 
+            background: #ff3232; 
+            color: white; 
+            text-decoration: none; 
+            font-weight: bold; 
+            border-radius: 5px; 
+            text-transform: uppercase;
+        }
+
+        .instrucciones {
+            color: #39ff14;
+            margin-bottom: 10px;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <h1>Vaporhaus Arcade</h1>
+    <div class="instrucciones">
+        <h2>🎮 Vaporhaus Arcade</h2>
+        <p>Usa las flechas o <strong>arrastra el dedo</strong> en la pantalla</p>
+    </div>
+    
     <canvas id="gameCanvas" width="800" height="600"></canvas>
+    
     <a href="/" class="btn-volver">Volver a la tienda</a>
 
     <script>
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
+        // --- 1. CARGA DE IMÁGENES ---
+        const imgJugador = new Image();
+        imgJugador.src = "https://e7.pngegg.com/pngimages/96/875/png-clipart-easter-basket-picnic-basket-empty-s-rectangle-material.png"; // <-- CAMBIA ESTO POR LA URL DE TU CANASTA
+
+        const imgVape = new Image();
+        imgVape.src = "https://static.vecteezy.com/system/resources/thumbnails/067/718/297/small/simple-pink-vape-device-with-clean-design-and-cutout-style-png.png"; // <-- CAMBIA ESTO POR LA URL DE TU VAPE/PRODUCTO
+
+        // --- 2. CARGA DE SONIDOS ---
+        const sonidoPunto = new Audio("https://mp3tourl.com/audio/1780538328882-2352c35d-a3f3-47ae-8e29-8fe63001800b.mp3"); // <-- CAMBIA ESTO POR TU SONIDO DE PUNTO
+        const sonidoGameOver = new Audio("https://mp3tourl.com/audio/1780538361183-da52eb19-d5e6-4cf1-8f13-81c4250c78eb.mp3"); // <-- CAMBIA ESTO POR TU SONIDO DE PERDER
+
         let score = 0;
         let vidas = 3;
         let nivel = 1;
         let game_over = false;
 
-        // Jugador (Canasta)
-        const jugador = { x: 350, y: 500, width: 80, height: 60, speed: 7 };
+        // Jugador
+        const jugador = { x: 350, y: 500, width: 80, height: 80, speed: 7 };
         
         // Elementos cayendo
         let vapes = [];
         let vapeSpeed = 3;
 
-        // Controles
+        // --- 3. CONTROLES DE TECLADO (PC) ---
         let rightPressed = false;
         let leftPressed = false;
 
@@ -44,66 +96,111 @@
             else if (e.key === "Left" || e.key === "ArrowLeft") leftPressed = false;
         });
 
+        // --- 4. CONTROLES TÁCTILES (MÓVIL) ---
+        canvas.addEventListener("touchmove", (e) => {
+            e.preventDefault(); // Evita que la pantalla haga scroll mientras juegas
+            const rect = canvas.getBoundingClientRect();
+            // Calcula la posición del dedo relativa al tamaño real del canvas en la pantalla
+            const scaleX = canvas.width / rect.width; 
+            const touchX = (e.touches[0].clientX - rect.left) * scaleX;
+            
+            // Centra la canasta en el dedo
+            jugador.x = touchX - (jugador.width / 2);
+
+            // Evita que el jugador se salga de los bordes
+            if (jugador.x < 0) jugador.x = 0;
+            if (jugador.x > canvas.width - jugador.width) jugador.x = canvas.width - jugador.width;
+        }, { passive: false });
+
         function spawnVape() {
             if (Math.random() < 0.02 + (nivel * 0.005)) {
-                vapes.push({ x: Math.random() * (canvas.width - 30), y: 0, width: 30, height: 60 });
+                vapes.push({ x: Math.random() * (canvas.width - 40), y: -50, width: 40, height: 60 });
             }
         }
 
         function draw() {
             if (game_over) {
-                ctx.fillStyle = "rgba(0,0,0,0.8)";
+                ctx.fillStyle = "rgba(0,0,0,0.85)";
                 ctx.fillRect(0,0,canvas.width,canvas.height);
-                ctx.fillStyle = "red";
-                ctx.font = "60px Arial";
-                ctx.fillText("GAME OVER", 220, 300);
+                ctx.fillStyle = "#ff3232";
+                ctx.font = "bold 60px Arial";
+                ctx.textAlign = "center";
+                ctx.fillText("GAME OVER", canvas.width / 2, 300);
                 ctx.fillStyle = "white";
                 ctx.font = "30px Arial";
-                ctx.fillText(`Puntos: ${score}`, 330, 350);
-                return; // Detiene el juego
+                ctx.fillText(`Puntos Finales: ${score}`, canvas.width / 2, 360);
+                ctx.fillStyle = "#00f2fe";
+                ctx.font = "20px Arial";
+                ctx.fillText("Recarga la página para intentar de nuevo", canvas.width / 2, 420);
+                return; // Detiene el bucle del juego
             }
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpiar pantalla
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
             ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Dibujar Textos
-            ctx.fillStyle = "#39ff14"; ctx.font = "24px Arial"; ctx.fillText(`PTS: ${score}`, 20, 30);
-            ctx.fillStyle = "#ff3232"; ctx.fillText(`VIDAS: ${vidas}`, 20, 60);
-            ctx.fillStyle = "#00f2fe"; ctx.fillText(`NIVEL: ${nivel}`, 680, 30);
+            // Dibujar Marcadores
+            ctx.textAlign = "left";
+            ctx.fillStyle = "#39ff14"; ctx.font = "bold 24px Arial"; ctx.fillText(`PTS: ${score}`, 20, 40);
+            ctx.fillStyle = "#ff3232"; ctx.fillText(`VIDAS: ${vidas}`, 20, 70);
+            ctx.fillStyle = "#00f2fe"; ctx.textAlign = "right"; ctx.fillText(`NIVEL: ${nivel}`, canvas.width - 20, 40);
 
-            // Mover y dibujar jugador (canasta simulada como rectángulo blanco)
+            // Mover jugador (Teclado)
             if (rightPressed && jugador.x < canvas.width - jugador.width) jugador.x += jugador.speed;
             else if (leftPressed && jugador.x > 0) jugador.x -= jugador.speed;
-            ctx.fillStyle = "white";
-            ctx.fillRect(jugador.x, jugador.y, jugador.width, jugador.height);
+            
+            // Dibujar Jugador (Imagen en lugar de rectángulo)
+            if (imgJugador.complete) {
+                ctx.drawImage(imgJugador, jugador.x, jugador.y, jugador.width, jugador.height);
+            } else {
+                // Fallback si la imagen no carga
+                ctx.fillStyle = "white";
+                ctx.fillRect(jugador.x, jugador.y, jugador.width, jugador.height);
+            }
 
             // Mover y dibujar vapes
             spawnVape();
             for (let i = 0; i < vapes.length; i++) {
                 let v = vapes[i];
                 v.y += vapeSpeed;
-                ctx.fillStyle = "#00f2fe";
-                ctx.fillRect(v.x, v.y, v.width, v.height);
+                
+                // Dibujar Vape (Imagen en lugar de rectángulo)
+                if (imgVape.complete) {
+                    ctx.drawImage(imgVape, v.x, v.y, v.width, v.height);
+                } else {
+                    ctx.fillStyle = "#00f2fe";
+                    ctx.fillRect(v.x, v.y, v.width, v.height);
+                }
 
-                // Colisión
+                // Colisión (Atrapar el objeto)
                 if (v.x < jugador.x + jugador.width && v.x + v.width > jugador.x &&
                     v.y < jugador.y + jugador.height && v.y + v.height > jugador.y) {
+                    
+                    // Reproducir sonido de atrapar
+                    sonidoPunto.currentTime = 0; // Reinicia el audio por si se atrapan varios rápido
+                    sonidoPunto.play().catch(e => console.log("Audio bloqueado por el navegador"));
+
                     score += 10;
                     if (score % 100 === 0) { nivel++; vapeSpeed++; }
                     vapes.splice(i, 1);
                     i--;
                 } 
-                // Fuera de pantalla
+                // Objeto se cae fuera de la pantalla
                 else if (v.y > canvas.height) {
                     vidas--;
                     vapes.splice(i, 1);
                     i--;
-                    if (vidas <= 0) game_over = true;
+                    if (vidas <= 0) {
+                        game_over = true;
+                        // Reproducir sonido de perder
+                        sonidoGameOver.play().catch(e => console.log("Audio bloqueado por el navegador"));
+                    }
                 }
             }
             requestAnimationFrame(draw);
         }
+        
+        // Iniciar juego
         draw();
     </script>
 </body>
