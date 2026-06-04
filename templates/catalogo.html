@@ -55,30 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 300); 
         }, 2000);
     });
-
-    // 2. ¡LA MAGIA DEL CARRITO!
-    // Buscamos todos los botones de comprar
-    const botonesComprar = document.querySelectorAll('.btn-agregar-carrito');
-    
-    botonesComprar.forEach(boton => {
-        boton.addEventListener('click', function() {
-            // Extraemos los datos del HTML
-            const productoNuevo = {
-                id: this.dataset.id,
-                nombre: this.dataset.nombre,
-                precio: parseFloat(this.dataset.precio),
-                imagen: this.dataset.imagen,
-                cantidad: 1 // Por defecto agregamos 1 al carrito
-            };
-            
-            // Llamamos a la función que está en carrito.js
-            if(typeof agregarAlCarrito === 'function') {
-                agregarAlCarrito(productoNuevo);
-            } else {
-                console.error("No se encontró la función agregarAlCarrito. Verifica que carrito.js esté cargando.");
-            }
-        });
-    });
 });
 </script>
 {% endblock %}

@@ -1,23 +1,23 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<div class="container text-center fade-in delay-1" style="margin-top: 15vh;">
+<div class="container text-center fade-in delay-1 hero-container">
     
-    <h1 class="display-1 fw-bold text-white mb-2" style="text-shadow: 0 0 20px rgba(57, 255, 20, 0.4);">
+    <h1 class="fw-bold text-white mb-2 hero-title" style="text-shadow: 0 0 20px rgba(57, 255, 20, 0.4);">
         VAPOR <span style="color: #39ff14;">HAUS</span>
     </h1>
     
-    <p class="text-light fs-3 mb-5 opacity-75">
+    <p class="text-light mb-4 opacity-75 hero-subtitle fs-5 fs-md-3">
         Eleva tus sentidos. La estética del vapor en tus manos.
     </p>
 
     <div class="mb-5 d-flex justify-content-center">
         <img src="https://www.indyperuvapes.pe/cdn/shop/articles/Tus_vapes_favoritos_del_verano_con_Indy_Peru.webp?v=1738627209" 
              alt="Vapor Haus Hero" 
-             style="height: 350px; object-fit: contain; filter: drop-shadow(0px 10px 25px rgba(255, 140, 0, 0.6)); animation: pulse 3s infinite;">
+             class="hero-image img-fluid">
     </div>
     
-    <a href="{{ url_for('catalogo') }}" class="btn btn-juego rounded-pill px-5 py-3 fs-4 mt-3 shadow-lg">
+    <a href="{{ url_for('catalogo') }}" class="btn btn-juego rounded-pill px-4 px-md-5 py-3 fs-5 fs-md-4 mt-2 shadow-lg">
         ⚡ VER CATÁLOGO
     </a>
 

@@ -288,4 +288,50 @@ body::before {
     footer {
         padding: 20px 10px !important;
     }
+}/* =========================================
+   INICIO HERO RESPONSIVE
+   ========================================= */
+
+/* Estilos base (Escritorio) */
+.hero-container {
+    margin-top: 15vh;
+}
+
+.hero-title {
+    font-size: 5rem; /* Tamaño similar a display-1 */
+    letter-spacing: 2px;
+}
+
+.hero-image {
+    max-height: 350px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0px 10px 25px rgba(255, 140, 0, 0.6));
+    animation: pulse 3s infinite;
+}
+
+/* 📱 Ajustes para Celulares Pequeños y Medianos */
+@media (max-width: 768px) {
+    .hero-container {
+        margin-top: 10vh; /* Subimos un poco el contenido para que quepa mejor */
+    }
+    
+    .hero-title {
+        font-size: 3.5rem; /* Achicamos el título para que no se rompa */
+    }
+
+    .hero-image {
+        max-height: 250px; /* Reducimos la imagen para que deje espacio al botón */
+    }
+}
+
+/* 📱 Ajustes para Celulares Muy Pequeños (ej. iPhone SE) */
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2.8rem;
+    }
+
+    .hero-image {
+        max-height: 200px;
+    }
 }
