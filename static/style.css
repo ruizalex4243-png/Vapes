@@ -261,7 +261,7 @@ body::before {
   }
 }
 
-/* Ajustes específicos para Celulares pequeños */
+/* Ajustes para Pantallas Medianas / Celulares Grandes */
 @media (max-width: 768px) {
   .hero .title {
     font-size: 2.5rem; 
@@ -284,6 +284,58 @@ body::before {
   footer {
     padding: 20px 10px !important;
   }
+
+  /* -----------------------------------------
+     ✨ OPTIMIZACIÓN PÁGINA DE COMPRA EXITOSA
+     ----------------------------------------- */
+  .fade-in[style*="margin-top: 15vh"] {
+    margin-top: 6vh !important; /* Reduce espacio muerto superior en móviles */
+  }
+
+  .display-2 {
+    font-size: 2.4rem !important; /* Evita que el título "¡COMPRA EXITOSA!" se rompa en 3 líneas */
+    line-height: 1.2;
+  }
+
+  .my-5 span[style*="font-size: 5rem"] {
+    font-size: 3.8rem !important; /* Emojis escalados proporcionalmente */
+  }
+
+  .fs-4 {
+    font-size: 1.15rem !important; /* Párrafo más legible y compacto */
+    padding: 0 10px;
+  }
+
+  /* Convertimos el contenedor de botones a flex vertical para mejor ergonomía */
+  .mt-5 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px; /* Espaciado uniforme entre botones apilados */
+    margin-top: 2.5rem !important;
+  }
+
+  .mt-5 .btn {
+    width: 100% !important;
+    max-width: 290px; /* Tamaño ideal para tocar con el pulgar */
+    margin-right: 0 !important; /* Elimina el margen lateral del botón "Volver" */
+    text-align: center;
+  }
+}
+
+/* Ajustes para Celulares Muy Pequeños (ej. iPhone SE) */
+@media (max-width: 480px) {
+  .display-2 {
+    font-size: 2rem !important;
+  }
+
+  .my-5 span[style*="font-size: 5rem"] {
+    font-size: 3.2rem !important;
+  }
+
+  .fs-4 {
+    font-size: 1rem !important;
+  }
 }
 
 /* =========================================
@@ -296,7 +348,7 @@ body::before {
 }
 
 .hero-title {
-  font-size: 5rem; /* Tamaño similar a display-1 */
+  font-size: 5rem; 
   letter-spacing: 2px;
 }
 
@@ -308,22 +360,21 @@ body::before {
   animation: pulse 3s infinite;
 }
 
-/* 📱 Ajustes para Celulares Pequeños y Medianos */
+/* Ajustes adicionales de Hero existentes */
 @media (max-width: 768px) {
   .hero-container {
-    margin-top: 10vh; /* Subimos un poco el contenido para que quepa mejor */
+    margin-top: 10vh; 
   }
   
   .hero-title {
-    font-size: 3.5rem; /* Achicamos el título para que no se rompa */
+    font-size: 3.5rem; 
   }
 
   .hero-image {
-    max-height: 250px; /* Reducimos la imagen para que deje espacio al botón */
+    max-height: 250px; 
   }
 }
 
-/* 📱 Ajustes para Celulares Muy Pequeños (ej. iPhone SE) */
 @media (max-width: 480px) {
   .hero-title {
     font-size: 2.8rem;
