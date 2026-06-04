@@ -225,3 +225,67 @@ body::before {
     border-radius: 12px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
+/* =========================================
+   📱 RESPONSIVE DESIGN (MÓVILES Y TABLETS)
+   ========================================= */
+
+/* Ajustes para Tablets y el Menú de Navegación */
+@media (max-width: 991px) {
+    /* Hacemos el fondo del navbar un poco más oscuro para que contraste mejor */
+    .custom-navbar {
+        background: rgba(15, 8, 20, 0.98); 
+    }
+    
+    /* Le damos estilo al menú desplegable (hamburguesa) para que no flote en la nada */
+    .navbar-collapse {
+        background: var(--bg-soft);
+        padding: 20px;
+        border-radius: 12px;
+        margin-top: 15px;
+        border: 1px solid var(--border);
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    /* Quitamos el margen izquierdo de los botones en móvil y los centramos */
+    .navbar-nav .ms-3 {
+        margin-left: 0 !important;
+        margin-top: 15px;
+    }
+    
+    /* Hacemos que el botón del carrito y del juego ocupen todo el ancho en el menú */
+    .navbar-nav .btn {
+        width: 100%;
+        display: block;
+    }
+}
+
+/* Ajustes específicos para Celulares pequeños */
+@media (max-width: 768px) {
+    /* Achicamos el título principal para que no se salga de la pantalla */
+    .hero .title {
+        font-size: 2.5rem; 
+    }
+    
+    /* Reducimos un poco el tamaño del precio */
+    .price-tag {
+        font-size: 1.2rem;
+    }
+
+    /* Reducimos el padding lateral para aprovechar el espacio de la pantalla */
+    .container-padding {
+        padding: 20px 10px;
+    }
+    
+    /* Ajustamos la altura de las cajas de imágenes para que no ocupen media pantalla */
+    .carousel-box,
+    .carousel-js,
+    .img-box {
+        height: 200px;
+    }
+    
+    /* Separación extra para el footer en móviles */
+    footer {
+        padding: 20px 10px !important;
+    }
+}

@@ -4,7 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const contadorBadge = document.getElementById("carrito-contador");
     const contenedorItems = document.getElementById("carrito-items");
     const txtTotal = document.getElementById("carrito-total");
+    
     actualizarInterfaz();
+    
     document.addEventListener("click", (e) => {
         if (e.target && e.target.classList.contains("btn-agregar-carrito")) {
             const boton = e.target;
@@ -34,10 +36,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         guardarYActualizar();
     }
+    
     function guardarYActualizar() {
         localStorage.setItem("vaporhaus_cart", JSON.stringify(carrito));
         actualizarInterfaz();
     }
+    
     function actualizarInterfaz() {
         if (!contenedorItems) return;
 

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Vaporhaus Arcade</title>
+    <style>
+        body { margin: 0; background-color: #0a0a0f; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; }
+        canvas { border: 2px solid #00f2fe; box-shadow: 0 0 15px #00f2fe; background: url('https://static.vecteezy.com/system/resources/previews/003/776/240/non_2x/blurred-colorful-holographic-background-in-neon-colors-trendy-wallpaper-foil-texture-vector.jpg') no-repeat center center; background-size: cover; }
+        .btn-volver { margin-top: 20px; padding: 10px 20px; background: #ff3232; color: white; text-decoration: none; font-weight: bold; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Vaporhaus Arcade</h1>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <a href="/" class="btn-volver">Volver a la tienda</a>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        let score = 0;
+        let vidas = 3;
+        let nivel = 1;
+        let game_over = false;
+
+        // Jugador (Canasta)
+        const jugador = { x: 350, y: 500, width: 80, height: 60, speed: 7 };
+        
+        // Elementos cayendo
+        let vapes = [];
+        let vapeSpeed = 3;
+
+        // Controles
+        let rightPressed = false;
+        let leftPressed = false;
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Right" || e.key === "ArrowRight") rightPressed = true;
+            else if (e.key === "Left" || e.key === "ArrowLeft") leftPressed = true;
+        });
+
+        document.addEventListener("keyup", (e) => {
+            if (e.key === "Right" || e.key === "ArrowRight") rightPressed = false;
+            else if (e.key === "Left" || e.key === "ArrowLeft") leftPressed = false;
+        });
+
+        function spawnVape() {
+            if (Math.random() < 0.02 + (nivel * 0.005)) {
+                vapes.push({ x: Math.random() * (canvas.width - 30), y: 0, width: 30, height: 60 });
+            }
+        }
+
+        function draw() {
+            if (game_over) {
+                ctx.fillStyle = "rgba(0,0,0,0.8)";
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.fillStyle = "red";
+                ctx.font = "60px Arial";
+                ctx.fillText("GAME OVER", 220, 300);
+                ctx.fillStyle = "white";
+                ctx.font = "30px Arial";
+                ctx.fillText(`Puntos: ${score}`, 330, 350);
+                return; // Detiene el juego
+            }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpiar pantalla
+            ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Dibujar Textos
+            ctx.fillStyle = "#39ff14"; ctx.font = "24px Arial"; ctx.fillText(`PTS: ${score}`, 20, 30);
+            ctx.fillStyle = "#ff3232"; ctx.fillText(`VIDAS: ${vidas}`, 20, 60);
+            ctx.fillStyle = "#00f2fe"; ctx.fillText(`NIVEL: ${nivel}`, 680, 30);
+
+            // Mover y dibujar jugador (canasta simulada como rectángulo blanco)
+            if (rightPressed && jugador.x < canvas.width - jugador.width) jugador.x += jugador.speed;
+            else if (leftPressed && jugador.x > 0) jugador.x -= jugador.speed;
+            ctx.fillStyle = "white";
+            ctx.fillRect(jugador.x, jugador.y, jugador.width, jugador.height);
+
+            // Mover y dibujar vapes
+            spawnVape();
+            for (let i = 0; i < vapes.length; i++) {
+                let v = vapes[i];
+                v.y += vapeSpeed;
+                ctx.fillStyle = "#00f2fe";
+                ctx.fillRect(v.x, v.y, v.width, v.height);
+
+                // Colisión
+                if (v.x < jugador.x + jugador.width && v.x + v.width > jugador.x &&
+                    v.y < jugador.y + jugador.height && v.y + v.height > jugador.y) {
+                    score += 10;
+                    if (score % 100 === 0) { nivel++; vapeSpeed++; }
+                    vapes.splice(i, 1);
+                    i--;
+                } 
+                // Fuera de pantalla
+                else if (v.y > canvas.height) {
+                    vidas--;
+                    vapes.splice(i, 1);
+                    i--;
+                    if (vidas <= 0) game_over = true;
+                }
+            }
+            requestAnimationFrame(draw);
+        }
+        draw();
+    </script>
+</body>
+</html>

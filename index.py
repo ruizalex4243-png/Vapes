@@ -1,19 +1,17 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
-import sqlite3
-import threading
-import random
-from datetime import datetime
 import os
-import io
-import requests
-import pygame
+import psycopg2
+import psycopg2.extras
+from datetime import datetime
 
 app = Flask(__name__)
-DB = "vaporhaus.sqlite"
+
+# URL de tu base de datos en Render
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://vapes_user:Bks8bEN969W1Sg0bYyThhhihy9mEcxyr@dpg-d8gcdojtqb8s73beuabg-a.oregon-postgres.render.com/vapes")
 
 def get_db():
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
+    # Conexión a PostgreSQL
+    conn = psycopg2.connect(DATABASE_URL)
     return conn
 
 PRODUCTOS = [
@@ -105,21 +103,25 @@ PRODUCTOS = [
 
 def init_db():
     conn = get_db()
-    conn.execute("""
+    cur = conn.cursor()
+    # En Postgres usamos SERIAL para auto-incrementar
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS ventas (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            cliente TEXT,
+            id SERIAL PRIMARY KEY,
+            cliente VARCHAR(255),
             direccion TEXT,
-            metodo_pago TEXT,
-            producto TEXT,
+            metodo_pago VARCHAR(50),
+            producto VARCHAR(255),
             cantidad INTEGER,
             total REAL,
-            fecha TEXT
+            fecha TIMESTAMP
         )
     """)
     conn.commit()
+    cur.close()
     conn.close()
 
+# Inicializar la base de datos al arrancar
 init_db()
 
 @app.route("/")
@@ -145,7 +147,11 @@ def compra_realizada():
 @app.route("/registro_ventas")
 def registro_venta():
     conn = get_db()
-    ventas = conn.execute("SELECT * FROM ventas ORDER BY id DESC").fetchall()
+    # RealDictCursor permite acceder a los datos como diccionarios (igual que sqlite3.Row)
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM ventas ORDER BY id DESC")
+    ventas = cur.fetchall()
+    cur.close()
     conn.close()
     return render_template("registro_venta.html", ventas=ventas)
 
@@ -153,15 +159,17 @@ def registro_venta():
 def venta():
     data = request.json
     conn = get_db()
+    cur = conn.cursor()
 
     cliente = data.get("cliente", "Desconocido")
     direccion = data.get("direccion", "Desconocida")
     pago = data.get("pago", "Efectivo")
 
     for item in data["carrito"]:
-        conn.execute("""
+        # En Postgres usamos %s para pasar las variables
+        cur.execute("""
             INSERT INTO ventas (cliente, direccion, metodo_pago, producto, cantidad, total, fecha)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
         """, (
             cliente,
             direccion,
@@ -173,129 +181,15 @@ def venta():
         ))
 
     conn.commit()
+    cur.close()
     conn.close()
 
     return jsonify({"status": "ok"})
 
-def cargar_imagen_url(url, tamano):
-    try:
-        respuesta = requests.get(url, timeout=5)
-        archivo_memoria = io.BytesIO(respuesta.content)
-        img = pygame.image.load(archivo_memoria).convert_alpha()
-        img = pygame.transform.smoothscale(img, tamano)
-        return img
-    except Exception as e:
-        surf = pygame.Surface(tamano)
-        surf.fill((176, 38, 255)) 
-        return surf
-
-def iniciar_juego_pygame():
-    pygame.init()
-    ANCHO, ALTO = 800, 600
-    pantalla = pygame.display.set_mode((ANCHO, ALTO))
-    pygame.display.set_caption("Vaporhaus Arcade")
-    clock = pygame.time.Clock()
-
-    # Colores y fuentes
-    NEGRO, BLANCO, ROJO, AZUL, VERDE = (10,10,15), (255,255,255), (255,50,50), (0,242,254), (57,255,20)
-    fuente = pygame.font.Font(None, 40)
-    fuente_big = pygame.font.Font(None, 100)
-
-    # Assets
-    fondo_img = cargar_imagen_url("https://static.vecteezy.com/system/resources/previews/003/776/240/non_2x/blurred-colorful-holographic-background-in-neon-colors-trendy-wallpaper-foil-texture-vector.jpg", (ANCHO, ALTO))
-    canasta_img = cargar_imagen_url("https://img.magnific.com/psd-gratis/rustic-woven-natural-fiber-basket-with-handles_84443-76208.jpg?semt=ais_hybrid&w=740&q=80", (100, 100))
-    URLS_VAPES = [
-        "https://myvapemx.com/wp-content/uploads/2021/06/11-600x600.png",
-        "https://masquevapor.com/76273-large_default/vaper-desechable-max-box-dragon-fruit.jpg",
-        "https://www.elfbar.de/cdn/shop/files/elfbar-800-dragonfruit-strawberry-2.png"
-    ]
-    vapes_imgs = [cargar_imagen_url(url, (40, 80)) for url in URLS_VAPES]
-
-    # Variables
-    jugador_x, jugador_y = ANCHO // 2 - 50, ALTO - 120
-    score, vidas, nivel, velocidad_caida = 0, 3, 1, 5
-    vapes_cayendo, particulas = [], []
-    running, game_over = True, False
-
-    def glow_text(texto, font, color, x, y):
-        sombra = font.render(texto, True, (0, 0, 0))
-        for i in range(3): pantalla.blit(sombra, (x+i, y+i))
-        txt = font.render(texto, True, color)
-        pantalla.blit(txt, (x, y))
-
-    while running:
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                running = False
-
-        teclas = pygame.key.get_pressed()
-        if teclas[pygame.K_ESCAPE]:
-            running = False
-
-        if not game_over:
-            # Movimiento
-            if teclas[pygame.K_LEFT] and jugador_x > 0: jugador_x -= 12
-            if teclas[pygame.K_RIGHT] and jugador_x < ANCHO - 100: jugador_x += 12
-
-            # Lógica
-            if random.randint(1, max(20, 60 - (nivel * 5))) == 1:
-                vapes_cayendo.append([random.randint(20, ANCHO - 60), -80, random.choice(vapes_imgs)])
-
-            pantalla.blit(fondo_img, (0, 0))
-            fondo_oscuro = pygame.Surface((ANCHO, ALTO))
-            fondo_oscuro.set_alpha(100)
-            fondo_oscuro.fill((0, 0, 0))
-            pantalla.blit(fondo_oscuro, (0, 0))
-
-            for vape in vapes_cayendo[:]:
-                vape[1] += velocidad_caida
-                pantalla.blit(vape[2], (vape[0], vape[1]))
-
-                if (jugador_x < vape[0] + 30 and jugador_x + 100 > vape[0] and
-                    jugador_y < vape[1] + 70 and jugador_y + 80 > vape[1]):
-                    score += 10
-                    for _ in range(15): particulas.append([vape[0]+20, vape[1]+40, random.randint(-8,8), random.randint(-8,8), random.randint(15,30), AZUL, random.randint(3,6)])
-                    vapes_cayendo.remove(vape)
-                    if score % 100 == 0:
-                        nivel += 1
-                        velocidad_caida += 1
-                    continue
-
-                if vape[1] > ALTO:
-                    vidas -= 1
-                    for _ in range(20): particulas.append([vape[0]+20, ALTO-10, random.randint(-8,8), random.randint(-8,8), random.randint(15,30), ROJO, random.randint(3,6)])
-                    vapes_cayendo.remove(vape)
-                    if vidas <= 0: game_over = True
-
-            pantalla.blit(canasta_img, (jugador_x, jugador_y))
-            
-            for p in particulas[:]:
-                p[0] += p[2]
-                p[1] += p[3]
-                p[4] -= 1
-                pygame.draw.circle(pantalla, p[5], (int(p[0]), int(p[1])), p[6])
-                if p[4] <= 0: particulas.remove(p)
-
-            glow_text(f"PTS: {score}", fuente, VERDE, 20, 20)
-            glow_text(f"VIDAS: {vidas}", fuente, ROJO, 20, 60)
-            glow_text(f"NIVEL: {nivel}", fuente, AZUL, ANCHO - 150, 20)
-        
-        else: # GAME OVER SCREEN
-            pantalla.fill(NEGRO)
-            glow_text("GAME OVER", fuente_big, ROJO, ANCHO//2 - 200, ALTO//2 - 100)
-            glow_text(f"PUNTOS: {score}", fuente, BLANCO, ANCHO//2 - 80, ALTO//2 + 20)
-            glow_text("ESC PARA SALIR", fuente, AZUL, ANCHO//2 - 110, ALTO//2 + 80)
-
-        pygame.display.update()
-        clock.tick(60)
-
-    pygame.quit()
-    return
-
 @app.route("/juego")
 def abrir_juego():
-    threading.Thread(target=iniciar_juego_pygame, daemon=True).start()
-    return redirect(url_for("inicio"))
+    # Ahora renderiza la versión web en lugar de abrir Pygame local
+    return render_template("juego.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
