@@ -1,337 +1,335 @@
 :root {
-    --bg-dark: #0f0814; 
-    --bg-soft: #1c1024;
-
-    --glass: rgba(30, 20, 45, 0.65); 
-
-    --mango: #FF8C00;
-    --fresa: #ff007f;
-    --lima: #39ff14;
-    --mora: #00f2fe;
-
-    --text: #ffffff;
-    --muted: rgba(255, 255, 255, 0.75);
-
-    --border: rgba(255, 255, 255, 0.15);
+  --bg-dark: #0f0814; 
+  --bg-soft: #1c1024;
+  --glass: rgba(30, 20, 45, 0.65); 
+  --mango: #FF8C00;
+  --fresa: #ff007f;
+  --lima: #39ff14;
+  --mora: #00f2fe;
+  --text: #ffffff;
+  --muted: rgba(255, 255, 255, 0.75);
+  --border: rgba(255, 255, 255, 0.15);
 }
+
 body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    color: white;
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  color: white;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
 }
+
 body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1; 
-    
-    background-image: url("https://img.magnific.com/vector-gratis/fondo-degradado-atardecer-tropical_52683-131844.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    
-    filter: blur(8px) brightness(0.4); 
-    
-    transform: scale(1.1);
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; 
+  background-image: url("https://img.magnific.com/vector-gratis/fondo-degradado-atardecer-tropical_52683-131844.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(8px) brightness(0.4); 
+  transform: scale(1.1);
 }
+
 .main-wrapper {
-    flex: 1;
-    margin-top: 90px;
+  flex: 1;
+  margin-top: 90px;
 }
 
 .container-padding {
-    padding: 40px 15px;
+  padding: 40px 15px;
 }
+
 .custom-navbar {
-    background: rgba(15, 8, 20, 0.85);
-    backdrop-filter: blur(18px);
-    border-bottom: 2px solid var(--fresa);
+  background: rgba(15, 8, 20, 0.85);
+  backdrop-filter: blur(18px);
+  border-bottom: 2px solid var(--fresa);
 }
 
 .text-neon {
-    color: var(--lima);
-    text-shadow: 0 0 12px rgba(57, 255, 20, 0.6);
+  color: var(--lima);
+  text-shadow: 0 0 12px rgba(57, 255, 20, 0.6);
 }
+
 .btn-neon {
-    border: none;
-    color: white;
-    background: linear-gradient(45deg, var(--mango), var(--fresa));
-    font-weight: 700;
-    transition: 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4);
+  border: none;
+  color: white;
+  background: linear-gradient(45deg, var(--mango), var(--fresa));
+  font-weight: 700;
+  transition: 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4);
 }
 
 .btn-neon:hover {
-    background: linear-gradient(45deg, var(--fresa), var(--mango));
-    box-shadow: 0 0 25px rgba(255, 0, 127, 0.7);
-    transform: translateY(-3px) scale(1.02);
+  background: linear-gradient(45deg, var(--fresa), var(--mango));
+  box-shadow: 0 0 25px rgba(255, 0, 127, 0.7);
+  transform: translateY(-3px) scale(1.02);
 }
 
 .btn-outline-neon {
-    border: 2px solid var(--mora);
-    color: var(--mora);
-    background: transparent;
-    font-weight: 600;
-    transition: 0.3s ease;
+  border: 2px solid var(--mora);
+  color: var(--mora);
+  background: transparent;
+  font-weight: 600;
+  transition: 0.3s ease;
 }
 
 .btn-outline-neon:hover {
-    background: var(--mora);
-    color: #000;
-    box-shadow: 0 0 20px rgba(0, 242, 254, 0.6);
-    transform: translateY(-2px);
+  background: var(--mora);
+  color: #000;
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.6);
+  transform: translateY(-2px);
 }
 
 .btn-juego {
-    background: linear-gradient(45deg, var(--mora), var(--lima));
-    color: #000;
-    font-weight: bold;
-    border: none;
-    box-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
-    transition: 0.3s;
-    animation: pulse 2s infinite;
+  background: linear-gradient(45deg, var(--mora), var(--lima));
+  color: #000;
+  font-weight: bold;
+  border: none;
+  box-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
+  transition: 0.3s;
+  animation: pulse 2s infinite;
 }
 
 .btn-juego:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 25px rgba(0, 242, 254, 0.8);
+  transform: scale(1.1);
+  box-shadow: 0 0 25px rgba(0, 242, 254, 0.8);
 }
+
 .product-card {
-    background: var(--glass);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    backdrop-filter: blur(12px);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
 }
 
 .product-card:hover {
-    transform: translateY(-12px);
-    border-color: var(--lima); 
-    box-shadow: 0 20px 40px rgba(57, 255, 20, 0.25);
+  transform: translateY(-12px);
+  border-color: var(--lima); 
+  box-shadow: 0 20px 40px rgba(57, 255, 20, 0.25);
 }
 
 /* IMAGEN */
 .carousel-box,
 .carousel-js,
 .img-box {
-    width: 100%;
-    height: 250px;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    border-radius: 15px 15px 0 0;
+  width: 100%;
+  height: 250px;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 15px 15px 0 0;
 }
 
 .carousel-img,
 .img-box img {
-    max-width: 90%;
-    max-height: 90%;
-    object-fit: contain;
-    transition: opacity 0.4s ease, transform 0.5s ease;
-    filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  transition: opacity 0.4s ease, transform 0.5s ease;
+  filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));
 }
 
 .product-card:hover .carousel-img,
 .product-card:hover .img-box img {
-    transform: scale(1.15) rotate(3deg); 
+  transform: scale(1.15) rotate(3deg); 
 }
+
 .category-badge {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    padding: 6px 12px;
-    border-radius: 20px;
-    background: linear-gradient(45deg, var(--fresa), #ff4b2b);
-    border: none;
-    color: white;
-    box-shadow: 0 4px 10px rgba(255, 0, 127, 0.4);
-    z-index: 10;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: linear-gradient(45deg, var(--fresa), #ff4b2b);
+  border: none;
+  color: white;
+  box-shadow: 0 4px 10px rgba(255, 0, 127, 0.4);
+  z-index: 10;
 }
 
 .price-tag {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: var(--lima);
-    text-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--lima);
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
 }
 
 .text-muted {
-    color: var(--muted);
+  color: var(--muted);
 }
 
 .offcanvas {
-    background: rgba(15, 8, 20, 0.98);
-    backdrop-filter: blur(25px);
-    border-left: 2px solid var(--mango);
+  background: rgba(15, 8, 20, 0.98);
+  backdrop-filter: blur(25px);
+  border-left: 2px solid var(--mango);
 }
+
 .hero {
-    min-height: 80vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .hero .title {
-    font-size: 4rem;
-    font-weight: 900;
-    letter-spacing: 2px;
+  font-size: 4rem;
+  font-weight: 900;
+  letter-spacing: 2px;
 }
 
 .hero .neon {
-    color: var(--mango);
-    text-shadow: 0 0 20px rgba(255, 140, 0, 0.6);
+  color: var(--mango);
+  text-shadow: 0 0 20px rgba(255, 140, 0, 0.6);
 }
 
 .btn-small {
-    padding: 8px 16px;
-    font-size: 0.9rem;
+  padding: 8px 16px;
+  font-size: 0.9rem;
 }
+
 @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(50px) scale(0.90); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateY(50px) scale(0.90); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
 
 .fade-in {
-    opacity: 0;
-    animation: fadeInUp 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  opacity: 0;
+  animation: fadeInUp 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
+
 .delay-1 { animation-delay: 0.1s; }
 .delay-2 { animation-delay: 0.3s; }
 .delay-3 { animation-delay: 0.5s; }
 .delay-4 { animation-delay: 0.7s; }
+
 .glass {
-    background: var(--glass);
-    backdrop-filter: blur(15px);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  background: var(--glass);
+  backdrop-filter: blur(15px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
+
 /* =========================================
    📱 RESPONSIVE DESIGN (MÓVILES Y TABLETS)
    ========================================= */
 
 /* Ajustes para Tablets y el Menú de Navegación */
 @media (max-width: 991px) {
-    /* Hacemos el fondo del navbar un poco más oscuro para que contraste mejor */
-    .custom-navbar {
-        background: rgba(15, 8, 20, 0.98); 
-    }
-    
-    /* Le damos estilo al menú desplegable (hamburguesa) para que no flote en la nada */
-    .navbar-collapse {
-        background: var(--bg-soft);
-        padding: 20px;
-        border-radius: 12px;
-        margin-top: 15px;
-        border: 1px solid var(--border);
-        text-align: center;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
+  .custom-navbar {
+    background: rgba(15, 8, 20, 0.98); 
+  }
+  
+  .navbar-collapse {
+    background: var(--bg-soft);
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 15px;
+    border: 1px solid var(--border);
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
 
-    /* Quitamos el margen izquierdo de los botones en móvil y los centramos */
-    .navbar-nav .ms-3 {
-        margin-left: 0 !important;
-        margin-top: 15px;
-    }
-    
-    /* Hacemos que el botón del carrito y del juego ocupen todo el ancho en el menú */
-    .navbar-nav .btn {
-        width: 100%;
-        display: block;
-    }
+  .navbar-nav .ms-3 {
+    margin-left: 0 !important;
+    margin-top: 15px;
+  }
+  
+  .navbar-nav .btn {
+    width: 100%;
+    display: block;
+  }
 }
 
 /* Ajustes específicos para Celulares pequeños */
 @media (max-width: 768px) {
-    /* Achicamos el título principal para que no se salga de la pantalla */
-    .hero .title {
-        font-size: 2.5rem; 
-    }
-    
-    /* Reducimos un poco el tamaño del precio */
-    .price-tag {
-        font-size: 1.2rem;
-    }
+  .hero .title {
+    font-size: 2.5rem; 
+  }
+  
+  .price-tag {
+    font-size: 1.2rem;
+  }
 
-    /* Reducimos el padding lateral para aprovechar el espacio de la pantalla */
-    .container-padding {
-        padding: 20px 10px;
-    }
-    
-    /* Ajustamos la altura de las cajas de imágenes para que no ocupen media pantalla */
-    .carousel-box,
-    .carousel-js,
-    .img-box {
-        height: 200px;
-    }
-    
-    /* Separación extra para el footer en móviles */
-    footer {
-        padding: 20px 10px !important;
-    }
-}/* =========================================
+  .container-padding {
+    padding: 20px 10px;
+  }
+  
+  .carousel-box,
+  .carousel-js,
+  .img-box {
+    height: 200px;
+  }
+  
+  footer {
+    padding: 20px 10px !important;
+  }
+}
+
+/* =========================================
    INICIO HERO RESPONSIVE
    ========================================= */
 
 /* Estilos base (Escritorio) */
 .hero-container {
-    margin-top: 15vh;
+  margin-top: 15vh;
 }
 
 .hero-title {
-    font-size: 5rem; /* Tamaño similar a display-1 */
-    letter-spacing: 2px;
+  font-size: 5rem; /* Tamaño similar a display-1 */
+  letter-spacing: 2px;
 }
 
 .hero-image {
-    max-height: 350px;
-    width: auto;
-    object-fit: contain;
-    filter: drop-shadow(0px 10px 25px rgba(255, 140, 0, 0.6));
-    animation: pulse 3s infinite;
+  max-height: 350px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0px 10px 25px rgba(255, 140, 0, 0.6));
+  animation: pulse 3s infinite;
 }
 
 /* 📱 Ajustes para Celulares Pequeños y Medianos */
 @media (max-width: 768px) {
-    .hero-container {
-        margin-top: 10vh; /* Subimos un poco el contenido para que quepa mejor */
-    }
-    
-    .hero-title {
-        font-size: 3.5rem; /* Achicamos el título para que no se rompa */
-    }
+  .hero-container {
+    margin-top: 10vh; /* Subimos un poco el contenido para que quepa mejor */
+  }
+  
+  .hero-title {
+    font-size: 3.5rem; /* Achicamos el título para que no se rompa */
+  }
 
-    .hero-image {
-        max-height: 250px; /* Reducimos la imagen para que deje espacio al botón */
-    }
+  .hero-image {
+    max-height: 250px; /* Reducimos la imagen para que deje espacio al botón */
+  }
 }
 
 /* 📱 Ajustes para Celulares Muy Pequeños (ej. iPhone SE) */
 @media (max-width: 480px) {
-    .hero-title {
-        font-size: 2.8rem;
-    }
+  .hero-title {
+    font-size: 2.8rem;
+  }
 
-    .hero-image {
-        max-height: 200px;
-    }
+  .hero-image {
+    max-height: 200px;
+  }
 }
